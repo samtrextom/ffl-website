@@ -1,3 +1,4 @@
+import { firestoreReducer } from "react-redux-firebase"
 
 export const createTeam = (team)=>{
     return(dispatch, getState,{getFirebase, getFirestore})=>{
@@ -31,61 +32,39 @@ export const createPlayer=(player)=>{
     }
 }
 
-export const toggleKeep=(data)=>{
+export const toggleKeep=(player)=>{
     return(dispatch,getState,{getFirebase,getFirestore})=>{
         const firestore = getFirestore()
+        console.log(player)
 
-        // let tempPlayers = []
+        firestore.collection('teams').doc(player.teamId).get().then(function(doc) {
+            if (doc.exists) {
 
-        // data.team.teamPlayers.forEach(player=>{tempPlayers.push(player)})
+                var tempArray = doc.data().teamPlayers
+                var index = null
 
-        if(data.player.keep){
-            firestore.collection('players').doc(data.player.id).set({
-                ...data.player,
-            keep:false
-        }).then(()=>{
-            dispatch({type:'TOGGLE_SUCCESS'})
-        }).catch((err)=>{
-            dispatch({type:'TOGGLE_ERROR',err})
-        })
+                for(var i=0; i<tempArray.length; i++){
+                    if(tempArray[i].id===player.id){index=i}
+                }
 
+                if(index !=null){
+                    tempArray.splice(index,1,{...player,keep:!player.keep})
+                    firestore.collection('teams').doc(player.teamId).update({
+                        teamPlayers:tempArray
+                    }).then(()=>{
+                        dispatch({type:'TOGGLE_SUCCESS'})
+                    }).catch((err)=>{
+                        dispatch({type:'TOGGLE_ERROR',err})
+                    })
+                }                
 
-            // var newPlayers = tempPlayers.slice(data.team.teamPlayers.indexOf(data.player))
-            // newPlayers.push({...data.player,keep:false})
+            } else {
 
-            // firestore.collection('teams').doc(data.team.id).set({
-            //     ...data.team,
-            //     teamPlayers: newPlayers
-            // }).then(()=>{
-            //     dispatch({type:'ADD_PLAYER_TO_TEAM_SUCCESS'})
-            // }).catch((err)=>{
-            //     dispatch({type:'ADD_PLAYER_TO_TEAM_ERROR',err})
-            // })
-
-
-
-        }else{
-            firestore.collection('players').doc(data.player.id).set({
-                ...data.player,
-                keep:true
-            }).then(()=>{
-                dispatch({type:'TOGGLE_SUCCESS'})
-            }).catch((err)=>{
-                dispatch({type:'TOGGLE_ERROR',err})
-            })
-
-            // var newPlayers = tempPlayers.slice(data.team.teamPlayers.indexOf(data.player))
-            // newPlayers.push({...data.player,keep:true})
-
-            // firestore.collection('teams').doc(data.team.id).set({
-            //     ...data.team,
-            //     teamPlayers: newPlayers
-            // }).then(()=>{
-            //     dispatch({type:'ADD_PLAYER_TO_TEAM_SUCCESS'})
-            // }).catch((err)=>{
-            //     dispatch({type:'ADD_PLAYER_TO_TEAM_ERROR',err})
-            // })
-        }
+                console.log("No such document!");
+            }
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+        });
     }
 }
 
@@ -96,7 +75,7 @@ export const addPlayersToTeam=(data)=>{
         data.teams.forEach(team => {
             var teamPlayers=[]
             data.players.forEach(player=>{
-                if(player.owner===team.ownerId){teamPlayers.push(player)}
+                if(player.owner===team.ownerId){teamPlayers.push({...player,teamId:team.id})}
             })
 
             firestore.collection('teams').doc(team.id).set({

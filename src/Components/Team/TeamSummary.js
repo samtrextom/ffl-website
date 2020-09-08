@@ -1,16 +1,15 @@
 import React from 'react'
-import {getFtvalues, getNextYearSalary} from '../../Store/Actions/mathActions'
+import {getNextYearSalary} from '../../Store/Actions/mathActions'
 
-const TeamSummary = ({team, players}) =>{
+const TeamSummary = ({team, ftvalues}) =>{
 
-    const ftvalues = getFtvalues(players)
-    const teamPlayers = team?players?players.filter(player=>(player.owner===team.ownerId)):null:null
+    const teamPlayers = team?team.teamPlayers:null
     var budget = 250
     var keeperTotal = 0
     var keepers=[]
 
-    const sure = teamPlayers?teamPlayers.forEach(player=>{
-        if(player.keep){keeperTotal+= getNextYearSalary({player,ftvalues}); keepers.push(player)}
+    const sure = teamPlayers&&ftvalues?teamPlayers.forEach(player=>{
+        if(player.keep){keeperTotal+= getNextYearSalary({player,ftvalues}); keepers.push(player);}
     }):null
 
     var qbTotal=0

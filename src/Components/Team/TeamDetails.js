@@ -1,20 +1,18 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {firestoreConnect} from 'react-redux-firebase'
-import {compose} from 'redux'
 import PlayerRow from './PlayerRow'
-import {getFtvalues, getNextYearSalary} from '../../Store/Actions/mathActions'
+import {getNextYearSalary} from '../../Store/Actions/mathActions'
 import {Redirect} from'react-router-dom'
 
 class TeamDetails extends React.Component{
 
     render(){
-        const {team, players, role, auth} = this.props
+        const {role, auth} = this.props
 
-        const ftvalues = getFtvalues(players)
+        const{team, ftvalues} = this.props.location.state
 
-        const teamPlayers = team?players?players.filter(player=>(player.owner===team.ownerId)):null:null
+        const teamPlayers = team?team.teamPlayers:null
 
         var budget = 250
 
@@ -47,7 +45,7 @@ class TeamDetails extends React.Component{
                         </thead>
                         <tbody>
                             {teamPlayers && teamPlayers.map(player=>{
-                                return(<PlayerRow player={player} ftvalues={ftvalues} team={team} key={player.id}/>)
+                                return(<PlayerRow player={player} ftvalues={ftvalues} team={team} auth={auth}key={player.id}/>)
                             })}
                         </tbody>
                     </table>
@@ -64,22 +62,25 @@ class TeamDetails extends React.Component{
 }
 
 const mapStateToProps=(state, ownProps)=>{
+
     const id = ownProps.match.params.id
-    const teams = state.firestore.ordered.teams
-    const team = teams? teams.find(team=>team.id===id):null
+    //const teams = state.firestore.ordered.teams
+    //const team = teams? teams.find(team=>team.id===id):null
 
     return{
         auth: state.firebase.auth,
-        team: team,
-        players:state.firestore.ordered.players,
+        // team: team,
+        // players:state.firestore.ordered.players,
         role: state.firebase.profile.role
     }
 }
 
-export default compose(
-    connect(mapStateToProps),
-    firestoreConnect([
-        {collection:'teams',
-        collection:'players'}
-    ])
-)(TeamDetails)
+// export default compose(
+//     connect(mapStateToProps),
+//     firestoreConnect([
+//         {collection:'teams',
+//         collection:'players'}
+//     ])
+// )(TeamDetails)
+
+export default connect(mapStateToProps)(TeamDetails)

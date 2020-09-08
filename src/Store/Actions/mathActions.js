@@ -22,12 +22,12 @@ export const getFtvalues=(players)=>{
 
 export const getNextYearSalary=(data)=>{
 
-    const newSalary = data.player.servicetime>2?
+    var newSalary = data.player.servicetime>2?
         data.player.position==='QB'?
-            data.ftvalues.qbft:data.player.position==='RB'?
-            data.ftvalues.rbft:data.player.position==='WR'?
-            data.ftvalues.wrft:data.player.position==='TE'?
-            data.ftvalues.teft:5:data.player.salary<5?5:data.player.salary<10?
+            data.ftvalues[0].qb:data.player.position==='RB'?
+            data.ftvalues[0].rb:data.player.position==='WR'?
+            data.ftvalues[0].wr:data.player.position==='TE'?
+            data.ftvalues[0].te:5:data.player.salary<5?5:data.player.salary<10?
                     10:Math.floor(data.player.salary*1.1)
 
     return newSalary
