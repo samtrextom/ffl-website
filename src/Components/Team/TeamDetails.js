@@ -4,13 +4,14 @@ import {connect} from 'react-redux'
 import PlayerRow from './PlayerRow'
 import {getNextYearSalary} from '../../Store/Actions/mathActions'
 import {Redirect} from'react-router-dom'
+import {compose} from 'redux'
+import {firestoreConnect} from 'react-redux-firebase'
 
 class TeamDetails extends React.Component{
 
     render(){
-        const {role, auth} = this.props
 
-        const{team, ftvalues} = this.props.location.state
+        const {role, auth, team, ftvalues} = this.props
 
         const teamPlayers = team?team.teamPlayers:null
 
@@ -18,7 +19,7 @@ class TeamDetails extends React.Component{
 
         var keeperTotal = 0
 
-        const sure = teamPlayers?teamPlayers.forEach(player=>{
+        const sure = teamPlayers&&ftvalues?teamPlayers.forEach(player=>{
             if(player.keep){keeperTotal+= getNextYearSalary({player,ftvalues})}
         }):null
 
@@ -28,18 +29,18 @@ class TeamDetails extends React.Component{
             return(
             <div className="container section team-details">
                 <div className="card z-depth-0">
-                    <span className="card-title">{team.name}</span>
+                    <span className="card-title">{team.name} </span> <div className="details-budget">Remaining Budget: ${budget-keeperTotal}</div>
                     {role==="admin"?<div><Link to={'/edit/'+team.ownerId}>Edit</Link></div>:null}
                     <table>
                         <thead>
                             <tr>
-                                <th className="player-table">Player</th>
-                                <th className="player-team-table">Team</th>
-                                <th className="position-table">Position</th>
-                                <th className="salary-table">Old Salary</th>
-                                <th className="service-time-table">Service Time</th>
-                                <th className="new-salary-table">New Salary</th>
-                                <th>Remaining Budget: ${budget-keeperTotal}</th>
+                                <th className="table-head">Name</th>
+                                <th className="table-head">Team</th>
+                                <th className="table-head">Pos</th>
+                                <th className="table-head">LYS</th>
+                                <th className="table-head">ST</th>
+                                <th className="table-head">Sal</th>
+                                <th></th>
                                 {/* <th><button onClick={this.onSave}>Save</button></th> */}
                             </tr>
                         </thead>
@@ -64,23 +65,21 @@ class TeamDetails extends React.Component{
 const mapStateToProps=(state, ownProps)=>{
 
     const id = ownProps.match.params.id
-    //const teams = state.firestore.ordered.teams
-    //const team = teams? teams.find(team=>team.id===id):null
+    const teams = state.firestore.ordered.teams
+    const team = teams? teams.find(team=>team.id===id):null
 
     return{
         auth: state.firebase.auth,
-        // team: team,
-        // players:state.firestore.ordered.players,
+        team: team,
+        ftvalues: state.firestore.ordered.ftvalues,
         role: state.firebase.profile.role
     }
 }
 
-// export default compose(
-//     connect(mapStateToProps),
-//     firestoreConnect([
-//         {collection:'teams',
-//         collection:'players'}
-//     ])
-// )(TeamDetails)
-
-export default connect(mapStateToProps)(TeamDetails)
+export default compose(
+    connect(mapStateToProps),
+    firestoreConnect([
+        {collection:'teams'},
+        {collection:'ftvalues'}
+    ])
+)(TeamDetails)

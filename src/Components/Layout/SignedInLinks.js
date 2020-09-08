@@ -7,8 +7,8 @@ const SingedInLinks =(props)=>{
 
     return(
         <ul className="right">
-            <li><NavLink to={'/team/'+props.profile.teamId}>My Team</NavLink></li>
-            <li><a onClick={props.signOut}>Log Out</a></li>
+            <li className='desktop-links'><NavLink to={'/team/'+props.profile.teamId}>My Team</NavLink></li>
+            <li className='desktop-links'><a onClick={props.signOut}>Log Out</a></li>
             <li><NavLink to='/' className='btn btn-floating blue lighten-1'>{props.profile.initials}</NavLink></li>
         </ul>
     )

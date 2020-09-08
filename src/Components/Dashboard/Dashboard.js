@@ -50,7 +50,7 @@ class Dashboard extends React.Component{
                         <h6>Division Two</h6>   
                         <TeamList teams={teams4} ftvalues={ftvalues} key={4}/>
                     </div>
-                    <div className="col s12 m4">
+                    <div className="col s12 m4 franchise-tags">
                         <h4>Franchise Tags</h4>
                         <table>
                             <thead>

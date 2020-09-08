@@ -1,0 +1,49 @@
+/*////////////////////////////////////
+//////DASHBOARD///////////////////////
+////////////////////////////////////*/
+
+.team-list a{
+    color: inherit;
+}
+.team-summary{
+    text-align: center;
+}
+.team-title{
+    font-size: 20px;
+    color: '#000000';
+}
+.card-owner{
+    font-size: 14px;
+}
+.card-keepers{
+    font-size: 12px;
+}
+.card-budget{
+    font-size: 12px;
+}
+.card-position{
+    font-size: 12px;
+}
+.notifications{
+    display: none;
+}
+.franchise-tags{
+    display: none;
+}
+
+.box{
+    transition:.2s all; 
+}
+
+.box-wrap:hover .box{
+    filter:blur(3px);
+    opacity:.5;
+    transform: scale(.98);
+    box-shadow:none;
+  }
+  .box-wrap:hover .box:hover{
+    transform:scale(1);
+    filter:blur(0px);
+    opacity:1;
+    box-shadow:0 8px 20px 0px rgba(0,0,0,0.125);
+  }

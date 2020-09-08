@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './Sass/App.scss';
 import {BrowserRouter, Switch, Route} from 'react-router-dom'
 import NavBar from './Components/Layout/NavBar'
 import Dashboard from './Components/Dashboard/Dashboard'
@@ -10,6 +10,8 @@ import CreateTeam from './Components/Team/CreateTeam'
 import EditTeam from './Components/Team/EditTeam'
 import Footer from './Components/Layout/Footer'
 import AddPlayersToTeam from './Components/Team/AddPlayersToTeam'
+import FranchiseTag from './Components/Team/FranchiseTag'
+import LeagueHistoryDash from './Components/History/LeagueHistoryDash';
 
 
 // const myClient = new Client({leagueId:593104})
@@ -34,6 +36,8 @@ function App() {
           <Route exact path='/create' component={CreateTeam}/>
           <Route exact path='/edit/:id' component={EditTeam}/>
           <Route exact path='/update' component={AddPlayersToTeam}/>
+          <Route exact path='/franchisetag' component={FranchiseTag}/>
+          <Route exact path='/history' component={LeagueHistoryDash}/>
         </Switch>
         <Footer/>
       </div>

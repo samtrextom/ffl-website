@@ -32,14 +32,20 @@ const TeamSummary = ({team, ftvalues}) =>{
     })
 
     return(
-        <div className="card z-depth-1 team-summary">
-            <span className="card-title">{team.name}</span>
-            <p>{team.ownerFirstName?team.ownerFirstName:'No Owner'}</p>
+        <div className="card z-depth-1 team-summary box">
+            <span className="team-title">{team.name}</span>
+            <span className="card-owner"> - {team.ownerFirstName?team.ownerFirstName:'No Owner'}</span>
             <div>
-                <span>Keepers: {keepers.length}</span><span> Budget: ${budget-keeperTotal}</span>
+                <span className="card-keepers">Keepers: {keepers.length}</span>
+                <span className="card-budget"> Budget: ${budget-keeperTotal}</span>
             </div>
             <div>
-                <span>QB: {qbTotal} </span><span>RB: {rbTotal} </span><span>WR: {wrTotal} </span><span>TE: {teTotal} </span><span>D/ST: {dstTotal} </span><span>K: {kTotal} </span>
+                <span className="card-position">QB: {qbTotal} </span>
+                <span className="card-position">RB: {rbTotal} </span>
+                <span className="card-position">WR: {wrTotal} </span>
+                <span className="card-position">TE: {teTotal} </span>
+                <span className="card-position">D/ST: {dstTotal} </span>
+                <span className="card-position">K: {kTotal} </span>
             </div>
         </div>
     )
