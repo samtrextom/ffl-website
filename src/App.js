@@ -11,7 +11,8 @@ import EditTeam from './Components/Team/EditTeam'
 import Footer from './Components/Layout/Footer'
 import AddPlayersToTeam from './Components/Team/AddPlayersToTeam'
 import FranchiseTag from './Components/Team/FranchiseTag'
-import LeagueHistoryDash from './Components/History/LeagueHistoryDash';
+import LeagueHistoryDash from './Components/History/LeagueHistoryDash'
+import AddSeason from './Components/Admin/AddSeason'
 
 
 // const myClient = new Client({leagueId:593104})
@@ -38,6 +39,7 @@ function App() {
           <Route exact path='/update' component={AddPlayersToTeam}/>
           <Route exact path='/franchisetag' component={FranchiseTag}/>
           <Route exact path='/history' component={LeagueHistoryDash}/>
+          <Route exact path='/updateseason' component={AddSeason}/>
         </Switch>
         <Footer/>
       </div>
