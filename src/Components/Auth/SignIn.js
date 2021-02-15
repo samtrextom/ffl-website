@@ -1,64 +1,57 @@
-import React from 'react'
-import {connect} from 'react-redux'
-import {signIn} from '../../Store/Actions/authActions'
-import {Redirect} from 'react-router-dom'
+import React, {useState, useRef} from 'react'
+import {useAuth} from '../../Context/AuthContext'
+import {Button, TextField} from '@material-ui/core'
+import {Alert} from '@material-ui/lab'
+import {useHistory} from 'react-router-dom'
 
-class SignIn extends React.Component{
+export default function SignIn() {
 
-    state={
-        email:'',
-        password:''
-    }
+    const emailRef = useRef()
+    const passwordRef = useRef()
 
-    handleChange=(e)=>{
-        this.setState({
-            [e.target.id]: e.target.value
-        })
-    }
+    const {login} = useAuth()
 
-    handleSubmit=(e)=>{
+    const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
+
+    const history = useHistory()
+
+    async function handleSubmit(e){
+
+        console.log(emailRef)
+        console.log(passwordRef)
+
         e.preventDefault()
-        this.props.signIn(this.state)
+
+        try{
+            setError('')
+            setLoading(true)
+            await login(emailRef.current.value, passwordRef.current.value)
+            history.push('/')
+            
+        }catch{
+            setError('Failed to login')
+        }
+
+        setLoading(false)
     }
 
-    render(){
-        const{authError,auth} = this.props
-
-        if(auth.uid) return <Redirect to='/'/>
-
-        return(
-            <div className="container">
-                <form onSubmit={this.handleSubmit} className="white">
-                    <h5 className="grey-text text-darken-3">Sign In</h5>
-                    <div className="input-field">
-                        <label htmlFor="email">Email</label>
-                        <input type="email" id="email" onChange={this.handleChange}/>
-                    </div>
-                    <div className="input-field">
-                        <label htmlFor="password">Password</label>
-                        <input type="password" id="password" onChange={this.handleChange}/>
-                    </div>
-                    <div className="input-field">
-                        <button className="btn blue lighten-3 z-depth-0">Log In</button>
-                <div className="red-text center">{authError?<p>{authError}</p>:null}</div>
-                    </div>
-                </form>
-            </div>
-        )
-    }
+    return (
+        <div>
+            <form onSubmit={handleSubmit}>
+                <h5>Sign In</h5>
+                {error && <Alert severity="error">{error}</Alert>}
+                <div>
+                    <TextField type="email" label="Email" inputRef={emailRef}/>
+                </div>
+                <div>
+                    <TextField type="password" label="Password" inputRef={passwordRef}/>
+                </div>
+                <div>
+                    <Button disabled={loading} type="submit" variant="contained" color="primary">Log In</Button>
+            <div></div>
+                </div>
+            </form>
+        </div>
+    )
 }
-
-const mapStateToProps=(state)=>{
-    return{
-        authError: state.auth.authError,
-        auth: state.firebase.auth
-    }
-}
-
-const mapDispatchToProps=(dispatch)=>{
-    return{
-        signIn:(creds)=> dispatch(signIn(creds))
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(SignIn)
